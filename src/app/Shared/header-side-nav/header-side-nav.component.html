@@ -1,0 +1,33 @@
+<div class="grid-container">
+    <div class="menu-icon" (click)="toggleSidenav()">
+        <i class="bi bi-list"></i>
+    </div>
+
+    <header class="header">
+        <div class="header__search">Search...</div>
+        <div class="header__avatar">Your face</div>
+    </header>
+
+    <aside class="sidenav" [ngClass]="{'active': sidenavOpen}">
+        <div class="sidenav__close-icon" (click)="toggleSidenav()">
+            <i class="bi bi-x-circle"></i>
+        </div>
+        <ul class="sidenav__list">
+            <li class="sidenav__list-item">Item One</li>
+            <li class="sidenav__list-item">Item Two</li>
+            <li class="sidenav__list-item">Item Three</li>
+            <li class="sidenav__list-item">Item Four</li>
+            <li class="sidenav__list-item">Item Five</li>
+        </ul>
+    </aside>
+
+    <main class="main">
+        <div id="map" style="height: 400px;"></div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer__copyright">&copy; 2024</div>
+        <div class="footer__signature">Cognitive Navigation Pvt. Ltd.</div>
+    </footer>
+</div>
