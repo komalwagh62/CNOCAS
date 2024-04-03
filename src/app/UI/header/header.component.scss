@@ -1,0 +1,21 @@
+/* Give every child element its grid name */
+.header {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+/* Make room for the menu icon on mobile */
+.header__search {
+  margin-left: 42px;
+}
+
+/* Align header navigation to the right */
+.header-nav.ms-auto {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Align navigation to the right */
+  padding: 0 16px;
+}

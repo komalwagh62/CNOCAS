@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-9">
+      <h2>Upgrade your plan</h2>
+      <p>uhjnoijk</p>
+      <div class="row">
+        <div class="col-md-3" *ngFor="let package of packages">
+          <div class="card" [ngClass]="{ 'standard-package': package.name === 'Standard' }">
+            <div class="card-body">
+              <h5 class="card-title">{{ package.name }}</h5>
+              <p class="card-text">{{ package.description }}</p>
+              <p class="card-price">{{ package.price }}</p>
+              <p class="card-access">{{ package.access }}</p>
+              <button class="btn btn-primary" (click)="upgradePackage(package.name)">Upgrade</button>
+              <div *ngIf="package.name === 'Standard'" class="recommends-label">Recommends</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <p class="text-right">For assistance, call us at: +1 (555) 123-4567</p>
+    </div>
+  </div>
+</div>

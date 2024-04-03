@@ -1,0 +1,63 @@
+/* Add your custom CSS styles here */
+
+
+.gradient-custom-4 {
+    background: linear-gradient(45deg, green);
+}
+
+/* Center the card vertically */
+.mask {
+    height: 100vh;
+}
+
+/* Override Bootstrap card styles */
+.card {
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Customize form elements */
+.form-outline {
+    position: relative;
+}
+
+.form-outline input[type="text"],
+.form-outline input[type="tel"],
+.form-outline input[type="email"],
+.form-outline input[type="password"] {
+    border-radius: 10px;
+}
+
+.form-check-input {
+    margin-top: 0.2rem;
+}
+
+/* OTP input style */
+.form-control-lg {
+    padding-right: 40px;
+}
+
+/* Styles for the OTP repeat icon */
+.position-absolute {
+    position: absolute;
+}
+
+/* Error message style */
+.alert {
+    margin-top: 0.5rem;
+}
+
+/* Adjust login link */
+.text-muted {
+    margin-top: 1rem;
+}
+.field {
+    position: relative;
+}
+
+.eye-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
