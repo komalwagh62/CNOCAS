@@ -12,6 +12,9 @@ app.use(cors());
 dotenv.config();
 app.use(bodyParser.json());
 
+
+
+
 // ===============================DB connection===========================================
 let PORT = process.env.PORT || 3001;
 
@@ -45,6 +48,9 @@ app.use('/api', airportRoutes);
 
 const otpRoutes = require('./routes/otpRoutes');
 app.use('/api/otp', otpRoutes);
+
+const subscriptionRoutes = require('./routes/subscriptionRoutes');
+app.use('/api/subscription', subscriptionRoutes);
 
 
 

@@ -72,7 +72,7 @@ exports.getAllUsers = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     const userId = req.body.id;
-    // console.log(req.body)
+    console.log(req.body)
     try {
         const user = await userService.updateUser(userId, req.body);
         // console.log(user)
@@ -143,86 +143,84 @@ exports.getMyProfile = async (req, res) => {
 
 
 
+
 exports.userLogin = async (req, res) => {
     try {
-        const user1 = await userService.getUserByEmail(req.body.email);
-        if (user1) {
-            if (user1.password === req.body.password) {
+        const user = await userService.getUserByEmail(req.body.email);
+
+        if (user) {
+            // Compare the provided password with the hashed password from the database
+            const isPasswordMatch = await bcrypt.compare(req.body.password, user.password);
+
+            if (isPasswordMatch) {
                 // Omit password from the user object
-                const { password, ...user } = user1.dataValues;
+                const { password, ...userWithoutPassword } = user.dataValues;
                 // Sign the user object (without the password) to generate the token
-                const token = jwt.sign(user, jwtconfig.jwtsecretkey, { expiresIn: jwtconfig.tokenExpiration });
+                const token = jwt.sign(userWithoutPassword, jwtconfig.jwtsecretkey, { expiresIn: jwtconfig.tokenExpiration });
                 // Send the token in the response
-                res.status(200).json({ message: "User Login Succesfully", success: true, jwttoken: token });
+                return res.status(200).json({ message: "User Login Successfully", success: true, jwttoken: token });
             } else {
-                res.status(404).json({ message: "Password not exists", success: false });
+                return res.status(404).json({ message: "Incorrect Password", success: false });
             }
         } else {
-            res.status(404).json({ message: "Email not found", success: false });
+            return res.status(404).json({ message: "User not found", success: false });
         }
     } catch (error) {
-        res.status(500).json({ error: "Internal Server Error", success: false });
+        console.error("Error during login:", error);
+        return res.status(500).json({ error: "Internal Server Error", success: false });
     }
 };
 
 
 exports.updatePassword = async (req, res) => {
-
     const { email, password } = req.body;
     try {
-        const user1 = await userService.getUserByEmail(req.body.email);
-        // user1.password = password
-        let newUser = { ...user1, password }
-        console.log(newUser.id, user1.id)
-        userService.updateUser(user1.id, newUser)
+        // Retrieve the user by email
+        const user = await userService.getUserByEmail(email);
 
-        res.status(200).json({ message: "password change succesfully", success: true })
-    } catch (error) {
-
-        res.status(500).json({ error: "Internal Server Error", success: false });
-    }
-}
-
-
-
-
-exports.changePassword = async (req, res) => {
-    
-    const { currentPassword, newPassword } = req.body;
-    
-    
-    try {
-        // Retrieve the user from the database
-        const user = await userService.getUserById(req.user.id);
-// console.log(req.user,"kmdf")
-        if (user) {
-            if (user.password === currentPassword) {
-              
-              
-                await userService.updateUser(req.user.id, {password: newPassword})
-
-                res.status(200).json({ message: 'Password updated succesfully', success: true });
-            }
-            else {
-                // console.log("sumant")
-               res.status(400).json({ message: 'current password is not match' });
-                
-            }
+        if (!user) {
+            return res.status(404).json({ message: "User not found", success: false });
         }
 
-        else {
-            // console.log("koaml")
-             res.status(404).json({ message: 'User not found' });
-        }
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        
+        // Update the user's password
+        await userService.updateUser(user.id, { password: hashedPassword });
+
+        return res.status(200).json({ message: "Password changed successfully", success: true });
     } catch (error) {
-        console.error('Error changing password:', error);
-        return res.status(500).json({ message: 'Internal Server Error' });
+        console.error("Error updating password:", error);
+        return res.status(500).json({ error: "Internal Server Error", success: false });
     }
 };
 
+exports.changePassword = async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    try {
+        // Retrieve the user by ID
+        const user = await userService.getUserById(req.user.id);
 
+        if (!user) {
+            return res.status(404).json({ message: "User not found", success: false });
+        }
 
+        // Compare the current password with the password stored in the database
+        const isPasswordMatch = await bcrypt.compare(currentPassword, user.password);
 
+        if (!isPasswordMatch) {
+            return res.status(400).json({ message: "Current password is incorrect", success: false });
+        }
 
+        // Hash the new password
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update the user's password
+        await userService.updateUser(req.user.id, { password: hashedNewPassword });
+
+        return res.status(200).json({ message: "Password updated successfully", success: true });
+    } catch (error) {
+        console.error("Error changing password:", error);
+        return res.status(500).json({ error: "Internal Server Error", success: false });
+    }
+};
